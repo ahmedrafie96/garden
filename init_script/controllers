@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+php artisan make:controller CustomerOrderController -p Customer -m Order --api
+php artisan make:controller CustomerTaskController -p Customer -m Task --api
+php artisan make:controller CustomerChatController -p Customer -m Chat --api
+php artisan make:controller GardnerTaskController -p Gardner -m Task --api
+php artisan make:controller GardnerChatController -p Gardner -m Chat --api
+php artisan make:controller ItemTypeController -p Type -m Item --api
+php artisan make:controller TypeController --api
+php artisan make:controller PurchaseItemController -p Purchase -m Item --api
+php artisan make:controller OrderPurchaseController -p Order -m Purchase --api
+php artisan make:controller PurchaseTaskController -p Purchase -m Task --api
+php artisan make:controller TaskLocationController -p Task -m Location --api
+php artisan make:controller TaskChatController -p Task -m Chat --api
+php artisan make:controller OrderPaymentController -p Order -m Payment --api
+php artisan make:controller PaymentMethodController -p Payment -m Method --api
+php artisan make:controller ChatMessageController -p Chat -m Message --api

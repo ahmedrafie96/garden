@@ -1,0 +1,95 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use {{ rootNamespace }}Http\Resources\{{model}}Resource;
+
+
+class {{ class }} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        //
+        return {{model}}Resource::collection({{model}}::search($request)->paginate($request->per_page??10));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+        $validator = Validator::make($request->all(),{{model}}::$createRules);
+        if($validator->fails()){
+            return response()->json([
+                'errors'=>$validator->errors()
+            ],402);
+        }
+        ${{modelVariable}} = {{model}}::create($validator->validated());
+        return new {{model}}Resource(${{modelVariable}});
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        //
+        return new {{model}}Resource(${{modelVariable}});
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, {{ model }} ${{ modelVariable }})
+    {
+        //
+        if($this->user->hasRole("admin") || $this->user->owns(${{modelVariable}})){
+            $validator = Validator::make($request->all(),{{model}}::$updateRules);
+            ${{modelVariable}}->update($validator->validated());
+            return new {{model}}Resource(${{modelVariable}});
+        }
+        return response()->json([
+            'errors'=>[],
+            'message'=> 'forbidden'
+        ],403);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        //
+        if($this->user->hasRole("admin") || $this->user->owns(${{modelVariable}})){
+            ${{modelVariable}}->delete();
+            return new {{model}}Resource(${{modelVariable}});
+        }
+        return response()->json([
+            'errors'=>[],
+            'message'=> 'forbidden'
+        ],403);
+    }
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# for model in $(cat init_script/models.txt)
+# do
+# php artisan make:model $model -mcr
+# done
+for model in $(cat init_script/models.txt)
+do
+php artisan make:factory ${model}Factory
+done
