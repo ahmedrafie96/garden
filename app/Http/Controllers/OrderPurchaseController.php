@@ -34,20 +34,25 @@ class OrderPurchaseController extends Controller
      */
     public function store(Request $request, Order $order)
     {
-        $validator = Validator::make($request->all(), Purchase::$createRules);
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 402);
+        if ($this->user->owns($order) || $this->user->hasRole('admin')) {
+
+            $validator = Validator::make($request->all(), Purchase::$createRules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => $validator->errors()
+                ], 402);
+            }
+            $purchase = Purchase::create($validator->validated());
+            $order->purchases()->save($purchase);
+            $task_validator = Validator::make($request->all(), Task::$createRules);
+            if (!$task_validator->fails()) {
+                $task = Task::create($task_validator->validated()['location']);
+                $task->customer()->save($order->customer);
+                $purchase->task()->save($task);
+            }
+            return new PurchaseResource($purchase);
         }
-        $purchase = Purchase::create($validator->validated());
-        $order->purchases()->save($purchase);
-        $task_validator = Validator::make($request->all(), Task::$createRules);
-        if (!$task_validator->fails()) {
-            $task = Task::create($task_validator->validated()['location']);
-            $purchase->task()->save($task);
-        }
-        return new PurchaseResource($purchase);
+        return response()->json(['error' => 'not_permitted'], 422);
     }
 
     /**
@@ -60,7 +65,9 @@ class OrderPurchaseController extends Controller
     public function show(Order $order, Purchase $purchase)
     {
         //
-        return new PurchaseResource($purchase);
+        if ($this->user->owns($order) || $this->user->hasRole('admin'))
+            return new PurchaseResource($purchase);
+        return response()->json(['error' => 'not_permitted'], 422);
     }
 
     /**

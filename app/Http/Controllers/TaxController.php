@@ -15,10 +15,15 @@ class TaxController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->middleware('authorizor:admin', ['except' => ['index', 'show']]);
+    }
     public function index(Request $request)
     {
         //
-        return TaxResource::collection(Tax::search($request)->paginate($request->per_page??10));
+        return TaxResource::collection(Tax::search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -30,11 +35,11 @@ class TaxController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Tax::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Tax::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $tax = Tax::create($validator->validated());
         return new TaxResource($tax);
@@ -62,15 +67,9 @@ class TaxController extends Controller
     public function update(Request $request, Tax $tax)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($tax)){
-            $validator = Validator::make($request->all(),Tax::$updateRules);
-            $tax->update($validator->validated());
-            return new TaxResource($tax);
-        }
-        return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+        $validator = Validator::make($request->all(), Tax::$updateRules);
+        $tax->update($validator->validated());
+        return new TaxResource($tax);
     }
 
     /**
@@ -82,13 +81,13 @@ class TaxController extends Controller
     public function destroy(Tax $tax)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($tax)){
+        if ($this->user->hasRole("admin") || $this->user->owns($tax)) {
             $tax->delete();
             return new TaxResource($tax);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

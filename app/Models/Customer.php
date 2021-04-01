@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class Customer extends User
 {
+    use LaratrustUserTrait;
+
     use HasFactory;
     protected $guarded = [];
+    protected $appends = ['list_identifiers','full_name'];
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -18,7 +23,7 @@ class Customer extends User
     {
         return $this->hasMany(Method::class);
     }
-    public function task()
+    public function tasks()
     {
         return $this->hasMany(Task::class);
     }
@@ -26,7 +31,7 @@ class Customer extends User
     {
         return $this->hasManyThrough(Purchase::class, Order::class);
     }
-    public function chat()
+    public function chats()
     {
         return $this->hasManyThrough(Chat::class, Task::class);
     }
@@ -50,5 +55,13 @@ class Customer extends User
     ];
     public function scopeSearch($query, Request $request)
     {
+    }
+    public function getListIdentifiersAttribute()
+    {
+        return ['customer.full_name','writer.full_name'];
+    }
+    public function getFullNameAttribute()
+    {
+        return "$this->first_name $this->middle_name $this->last_name";
     }
 }

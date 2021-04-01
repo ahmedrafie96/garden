@@ -14,6 +14,11 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->middleware('authorizor:admin', ['except' => ['index', 'show']]);
+    }
     public function index(Request $request)
     {
         return ItemResource::collection(Item::search($request)->paginate($request->per_page??10));

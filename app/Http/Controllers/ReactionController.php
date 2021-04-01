@@ -15,10 +15,15 @@ class ReactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->middleware('authorizor:admin', ['except' => ['index', 'show']]);
+    }
     public function index(Request $request)
     {
         //
-        return ReactionResource::collection(Reaction::search($request)->paginate($request->per_page??10));
+        return ReactionResource::collection(Reaction::search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -30,11 +35,11 @@ class ReactionController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Reaction::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Reaction::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $reaction = Reaction::create($validator->validated());
         return new ReactionResource($reaction);
@@ -62,15 +67,15 @@ class ReactionController extends Controller
     public function update(Request $request, Reaction $reaction)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($reaction)){
-            $validator = Validator::make($request->all(),Reaction::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($reaction)) {
+            $validator = Validator::make($request->all(), Reaction::$updateRules);
             $reaction->update($validator->validated());
             return new ReactionResource($reaction);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -82,13 +87,13 @@ class ReactionController extends Controller
     public function destroy(Reaction $reaction)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($reaction)){
+        if ($this->user->hasRole("admin") || $this->user->owns($reaction)) {
             $reaction->delete();
             return new ReactionResource($reaction);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

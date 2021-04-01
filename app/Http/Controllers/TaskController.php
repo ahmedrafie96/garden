@@ -17,8 +17,13 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        return TaskResource::collection(Task::search($request)->paginate($request->per_page??10));
+        $tasks = [];
+        if ($this->user->hasRole('admin')) {
+            $tasks = Task::get();
+        } else {
+            $tasks = $this->user->tasks();
+        }
+        return TaskResource::collection($tasks->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -30,11 +35,11 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Task::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Task::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $task = Task::create($validator->validated());
         return new TaskResource($task);
@@ -62,15 +67,15 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($task)){
-            $validator = Validator::make($request->all(),Task::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($task)) {
+            $validator = Validator::make($request->all(), Task::$updateRules);
             $task->update($validator->validated());
             return new TaskResource($task);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -82,13 +87,13 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($task)){
+        if ($this->user->hasRole("admin") || $this->user->owns($task)) {
             $task->delete();
             return new TaskResource($task);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

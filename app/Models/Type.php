@@ -10,7 +10,7 @@ class Type extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifier'];
+    protected $appends = ['list_identifiers'];
     public function item()
     {
         return $this->belongsTo(Item::class);
@@ -28,8 +28,8 @@ class Type extends Model
     public function scopeSearch($query, Request $request)
     {
     }
-    public function getListIdentifierAttribute()
+    public function getListIdentifiersAttribute()
     {
-        return 'type.name';
+        return ['type.name'];
     }
 }

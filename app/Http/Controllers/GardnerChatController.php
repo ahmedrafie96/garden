@@ -21,7 +21,7 @@ class GardnerChatController extends Controller
     public function index(Request $request,Gardner $gardner)
     {
         //
-        return GardnerResource::collection(Gardner::search($request)->paginate($request->per_page??10));
+        return GardnerResource::collection($gardner->chats()->search($request)->paginate($request->per_page??10));
     }
 
     /**

@@ -16,6 +16,13 @@ class GalleryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        
+        parent::__construct($request);
+     
+        $this->middleware('authorizor:admin', ['except' => ['index', 'show']]);
+    }
     public function index(Request $request)
     {
         //

@@ -20,7 +20,6 @@ class AuthController extends Controller
         // ($cridentials);
         $this->token = null;
         $guards = ['customers', 'admins', 'gardners'];
-        $c=0;
         foreach ($guards as $guard){
             $token = $this->guard($guard)->attempt($cridentials);
             if($token){

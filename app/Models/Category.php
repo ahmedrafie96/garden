@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class Category extends Model
+class Category extends BaseModel
 {
     protected $guarded = [];
     protected $appends = ['list_identifier', 'item_count', 'post_count'];

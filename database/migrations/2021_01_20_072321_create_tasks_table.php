@@ -17,9 +17,11 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->unsignedBigInteger('purchase_id')->nullable();
             $table->unsignedBigInteger('gardner_id')->nullable();
+            $table->unsignedBigInteger('customer_id')->nullable();
             $table->float('lng')->nullable();
             $table->float('lat')->nullable();
             $table->string("description")->nullable();
+            $table->enum('status',['pending','in_progress','done'])->default('pending');
             $table->timestamps();
         });
     }

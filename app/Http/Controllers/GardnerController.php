@@ -15,6 +15,11 @@ class GardnerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->middleware('authorizor:admin');
+    }
     public function index(Request $request)
     {
         //

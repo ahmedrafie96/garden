@@ -20,6 +20,8 @@ class GardnerObserver
     public function created(Gardner $gardner)
     {
         //
+        $gardner->attachRole('gardner');
+
     }
 
     /**

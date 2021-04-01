@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->double('total_price')->default(0);
             $table->double('total_discount')->default(0);
-            $table->unsignedBigInteger('tax_id');
+            $table->unsignedBigInteger('tax_id')->nullable();
             $table->timestamps();
         });
     }

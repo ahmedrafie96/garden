@@ -18,10 +18,10 @@ class CustomerOrderController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,Customer $customer)
+    public function index(Request $request, Customer $customer)
     {
         //
-        return CustomerResource::collection(Customer::search($request)->paginate($request->per_page??10));
+        return CustomerResource::collection($customer->orders()->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -33,11 +33,11 @@ class CustomerOrderController extends Controller
      */
     public function store(Request $request, Customer $customer)
     {
-        $validator = Validator::make($request->all(),Order::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Order::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $order = Order::create($validator->validated());
         $customer->orders()->save($order);
@@ -68,15 +68,15 @@ class CustomerOrderController extends Controller
     public function update(Request $request, Customer $customer, Order $order)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($order)){
-            $validator = Validator::make($request->all(),Order::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($order)) {
+            $validator = Validator::make($request->all(), Order::$updateRules);
             $order->update($validator->validated());
             return new OrderResource($order);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -89,13 +89,13 @@ class CustomerOrderController extends Controller
     public function destroy(Customer $customer, Order $order)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($order)){
+        if ($this->user->hasRole("admin") || $this->user->owns($order)) {
             $order->delete();
             return new OrderResource($order);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

@@ -20,11 +20,8 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
+    protected $appends = ['full_name'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,16 +39,31 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime:Y-m-d H:m',
+        'created_at' => 'datetime:Y-m-d H:m',
+        'updated_at' => 'datetime:Y-m-d H:m',
     ];
-    public function getJWTIdentifier(){
+    public function getJWTIdentifier()
+    {
         return $this->getKey();
     }
-    public function getJWTCustomClaims(){
+    public function getJWTCustomClaims()
+    {
         return [];
     }
-    public function scopeSearch($query,Request $request){
-
+    public function scopeSearch($query, Request $request)
+    {
     }
-    
+    public function posts()
+    {
+        return $this->morphMany(Post::class, 'writer');
+    }
+    public function getFullNameAttribute()
+    {
+        return "$this->first_name $this->middle_name $this->last_name";
+    }
+    // public function getListIdentifierAttribute()
+    // {
+    //     return 'name';
+    // }
 }

@@ -2,27 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TypeResource;
-use App\Models\Type;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class TypeController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->middleware('authorizor:admin', ['except' => ['index', 'show']]);
-    }
-    public function index(Request $request)
+    public function index()
     {
         //
-        return TypeResource::collection(Type::search($request)->paginate($request->per_page ?? 10));
+        
     }
 
     /**
@@ -34,14 +26,6 @@ class TypeController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(), Type::$createRules);
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 402);
-        }
-        $type = Type::create($validator->validated());
-        return new TypeResource($type);
     }
 
     /**
@@ -73,9 +57,8 @@ class TypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Type $type)
+    public function destroy($id)
     {
-        $type->delete();
-        return new TypeResource($type);
+        //
     }
 }

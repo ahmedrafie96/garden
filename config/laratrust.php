@@ -73,7 +73,9 @@ return [
     |
     */
     'user_models' => [
-        'users' => \App\Models\User::class,
+        'customers' => \App\Models\Customer::class,
+        'admins' => \App\Models\Admin::class,
+        'gardners' => \App\Models\Gardner::class
     ],
 
     /*

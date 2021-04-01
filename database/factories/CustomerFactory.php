@@ -30,7 +30,7 @@ class CustomerFactory extends Factory
             'email' =>'customer'.rand(0,255).'@garden.com',
             'mobile'=>$this->faker->phoneNumber,
             'email_verified_at' => now(),
-            'password' => Hash::make('123456'), // password
+            'password' => '123456', // password
             'remember_token' => Str::random(10),
         ];
     }

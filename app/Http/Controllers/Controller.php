@@ -19,12 +19,13 @@ class Controller extends BaseController
     public $resource;
     public function __construct(Request $request)
     {
-        $this->user = RequestIdentifier::getUser($request);
+        $this->user =$request->get('user');// RequestIdentifier::getUser($request);
         $class =get_class($this);
         $class=substr(strrchr($class, "\\"), 1);
         $model_name =substr($class,0,strpos($class,"Controller"));
         $this->model = 'App\\Models\\'.$model_name;
         $this->resource = 'App\\Http\\Resources\\'.$model_name.'Resource';
+        
     }
     public function dynamicStore(Request $request,$model,$parent_model=null){
         $validator = RequestValidator::validator($request,$model::$createRules,$model::$createErrorMessages);

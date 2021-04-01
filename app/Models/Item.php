@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class Item extends Model
+class Item extends BaseModel
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifier','image'];
+    protected $appends = ['list_identifiers','image'];
     protected $with=['type'];
     public function items(){
         return $this->hasMany(Item::class);
@@ -50,9 +49,9 @@ class Item extends Model
     public function scopeSearch($query,Request $request){
 
     }
-    public function getListIdentifierAttribute()
+    public function getListIdentifiersAttribute()
     {
-        return 'item.name';
+        return ['item.name'];
     }
     public function getImageAttribute(){
         return $this->gallery?$this->gallery->cover_image:null;

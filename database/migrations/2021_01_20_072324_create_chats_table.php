@@ -17,7 +17,7 @@ class CreateChatsTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->unsignedBigInteger('media_id')->nullable();
-            $table->unsignedBigInteger('task_id');
+            $table->unsignedBigInteger('task_id')->nullable();
             $table->timestamps();
         });
     }

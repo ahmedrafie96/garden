@@ -21,7 +21,7 @@ class CustomerChatController extends Controller
     public function index(Request $request,Customer $customer)
     {
         //
-        return CustomerResource::collection(Customer::search($request)->paginate($request->per_page??10));
+        return CustomerResource::collection($customer->chats()::search($request)->paginate($request->per_page??10));
     }
 
     /**

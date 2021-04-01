@@ -11,6 +11,10 @@
 |
 */
 
+use App\Models\Admin;
+use App\Models\Customer;
+use App\Models\Gardner;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -51,5 +55,10 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+\Illuminate\Database\Eloquent\Relations\Relation::morphMap([
+    'admin' => Admin::class,
+    'customer' => Customer::class,
+    'gardner'=>Gardner::class,
+]);
 
 return $app;

@@ -21,7 +21,7 @@ class GalleryMediaController extends Controller
     public function index(Request $request, Gallery $gallery)
     {
         //
-        return GalleryResource::collection(Gallery::search($request)->paginate($request->per_page ?? 10));
+        return GalleryResource::collection($gallery->media()->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -46,7 +46,6 @@ class GalleryMediaController extends Controller
             'public'
         );
         $arr += ['path' => $path];
-        return response()->json(compact('arr'));
         $media = Media::create($arr);
         return new MediaResource($media);
     }

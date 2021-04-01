@@ -18,7 +18,7 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         //
-        return CustomerResource::collection(Customer::search($request)->paginate($request->per_page??10));
+        return CustomerResource::collection(Customer::search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -30,12 +30,13 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Customer::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Customer::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
+        // return response()->json(['a'=>$validator->validated()]);
         $customer = Customer::create($validator->validated());
         return new CustomerResource($customer);
     }
@@ -62,15 +63,15 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($customer)){
-            $validator = Validator::make($request->all(),Customer::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($customer)) {
+            $validator = Validator::make($request->all(), Customer::$updateRules);
             $customer->update($validator->validated());
             return new CustomerResource($customer);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -82,13 +83,13 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($customer)){
+        if ($this->user->hasRole("admin") || $this->user->owns($customer)) {
             $customer->delete();
             return new CustomerResource($customer);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

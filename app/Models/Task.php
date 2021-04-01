@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class Task extends Model
+class Task extends BaseModel
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifier'];
+    protected $appends = ['list_identifiers'];
 
     public function purchase(){
         return $this->belongsTo(Purchase::class);
@@ -30,8 +29,8 @@ class Task extends Model
     public static $createRules= [
         'purchase_id'=>'sometimes|exists:purchases,id',
         'gardner_id'=>'sometimes|exists:gardners,id',
-        'location.lng'=>'sometimes|numeric',
-        'location.lat'=>'sometimes|numeric'
+        'location.lng'=>'required|numeric',
+        'location.lat'=>'required|numeric'
     ];
     public static $updateRules= [
         'purchase_id'=>'sometimes|exists:purchases,id',
@@ -42,8 +41,8 @@ class Task extends Model
     public function scopeSearch($query,Request $request){
 
     }
-    public function getListIdentifierAttribute()
+    public function getListIdentifiersAttribute()
     {
-        return 'task.description';
+        return ['task.description'];
     }
 }

@@ -15,10 +15,15 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->middleware('authorizor:admin', ['except' => ['index', 'show']]);
+    }
     public function index(Request $request)
     {
         //
-        return CategoryResource::collection(Category::search($request)->paginate($request->per_page??10));
+        return CategoryResource::collection(Category::search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -30,11 +35,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Category::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Category::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $category = Category::create($validator->validated());
         return new CategoryResource($category);
@@ -62,15 +67,15 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($category)){
-            $validator = Validator::make($request->all(),Category::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($category)) {
+            $validator = Validator::make($request->all(), Category::$updateRules);
             $category->update($validator->validated());
             return new CategoryResource($category);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -82,13 +87,13 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($category)){
+        if ($this->user->hasRole("admin") || $this->user->owns($category)) {
             $category->delete();
             return new CategoryResource($category);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\Customer;
+use App\Models\Gallery;
 use App\Models\Gardner;
 use App\Models\Item;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,14 +20,21 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        Admin::factory(1)->create([
-            'email'=>'admin@admin.com'
+        $a_role = Role::create(['name' => 'admin']);
+        $c_role = Role::create(['name' => 'customer']);
+        $g_role = Role::create(['name' => 'gardner']);
+        $admin = Admin::factory(1)->create([
+            'email' => 'admin@admin.com'
         ]);
-        Gardner::factory(1)->create([
-            'email'=>'gardner@gardner.com'
+        $gardner = Gardner::factory(1)->create([
+            'email' => 'gardner@gardner.com'
         ]);
-        Customer::factory(1)->create([
-            'email'=>'customer@customer.com'
+        $customer = Customer::factory(1)->create([
+            'email' => 'customer@customer.com'
+        ]);
+        Admin::find(1)->attachRole($a_role);
+        Gallery::create([
+            'name' => 'general gallery'
         ]);
     }
 }

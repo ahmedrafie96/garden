@@ -20,6 +20,7 @@ class CustomerObserver
     public function created(Customer $customer)
     {
         //
+        $customer->attachRole('customer');
     }
 
     /**

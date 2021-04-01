@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Tag extends BaseModel
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifier'];
-    public function getListIdentifierAttribute()
+    protected $appends = ['list_identifiesr'];
+    public function getListIdentifiersAttribute()
     {
-        return 'tag.name';
+        return ['tag.name'];
     }
 }

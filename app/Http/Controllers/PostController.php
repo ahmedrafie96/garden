@@ -18,7 +18,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         //
-        return PostResource::collection(Post::search($request)->paginate($request->per_page??10));
+        return PostResource::collection(Post::search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -30,13 +30,14 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Post::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Post::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $post = Post::create($validator->validated());
+        $this->user->posts()->save($post);
         return new PostResource($post);
     }
 
@@ -62,15 +63,15 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($post)){
-            $validator = Validator::make($request->all(),Post::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($post)) {
+            $validator = Validator::make($request->all(), Post::$updateRules);
             $post->update($validator->validated());
             return new PostResource($post);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -82,13 +83,13 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($post)){
+        if ($this->user->hasRole("admin") || $this->user->owns($post)) {
             $post->delete();
             return new PostResource($post);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

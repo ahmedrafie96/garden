@@ -18,8 +18,12 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         //
-        return OrderResource::collection(Order::search($request)->paginate($request->per_page??10));
-
+        $orders = [];
+        if ($this->user->hasRole('admin'))
+            $orders = Order::get();
+        else
+            $orders = $this->user->orders();
+        return OrderResource::collection($orders->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -35,7 +39,6 @@ class OrderController extends Controller
             return response()->json(['errors' => $validator->errors()]);
         }
         $order = Order::create($validator->validated()['data']);
-        $order->purchases()->saveMany(Purchase::insert($validator->validated()['items']));
         return new OrderResource($order);
     }
 
@@ -47,7 +50,9 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return new OrderResource($order);
+        if ($this->user->owns($order) || $this->user->hasRole('admin'))
+            return new OrderResource($order);
+        return response()->json(['error' => 'not_permitted'], 422);
     }
 
     /**

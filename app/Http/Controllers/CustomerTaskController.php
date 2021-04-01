@@ -18,10 +18,10 @@ class CustomerTaskController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,Customer $customer)
+    public function index(Request $request, Customer $customer)
     {
         //
-        return CustomerResource::collection(Customer::search($request)->paginate($request->per_page??10));
+        return CustomerResource::collection($customer->tasks()->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -33,11 +33,11 @@ class CustomerTaskController extends Controller
      */
     public function store(Request $request, Customer $customer)
     {
-        $validator = Validator::make($request->all(),Task::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Task::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $task = Task::create($validator->validated());
         $customer->tasks()->save($task);
@@ -68,15 +68,15 @@ class CustomerTaskController extends Controller
     public function update(Request $request, Customer $customer, Task $task)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($task)){
-            $validator = Validator::make($request->all(),Task::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($task)) {
+            $validator = Validator::make($request->all(), Task::$updateRules);
             $task->update($validator->validated());
             return new TaskResource($task);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -89,13 +89,13 @@ class CustomerTaskController extends Controller
     public function destroy(Customer $customer, Task $task)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($task)){
+        if ($this->user->hasRole("admin") || $this->user->owns($task)) {
             $task->delete();
             return new TaskResource($task);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }
