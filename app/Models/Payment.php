@@ -11,6 +11,8 @@ class Payment extends BaseModel implements Ownable
 {
     use HasFactory;
     protected $guarded = [];
+    protected $with = ['customer'];
+    protected $appends = ['headers'];
     public function method()
     {
         return $this->hasOne(Method::class);
@@ -40,13 +42,23 @@ class Payment extends BaseModel implements Ownable
     }
     public function confirm($card_token)
     {
-        $this->update(['amount'=>$this->order->total_price]);
+        $this->update(['amount' => $this->order->total_price]);
         Stripe::setApiKey('sk_test_51HflfKI5KESslpeP2pWDNmRBlrazJSWozUhFxglLH9ACsWS6wZcIu959HLqlefVbOVF3erjVdlkYlWXdt9w4U24q00aCnApNMT');
         $charge = \Stripe\Charge::create([
-            'amount' => intval($this->amount*100),
+            'amount' => intval($this->amount * 100),
             'currency' => 'usd',
             'source' => $card_token,
-            'description'=>'Order '.$this->order_id
+            'description' => 'Order ' . $this->order_id
         ]);
+    }
+    public function getHeadersAttribute()
+    {
+        return [
+            'id',
+            'order_id',
+            'customer.name',
+            'amount',
+            'created_at'
+        ];
     }
 }

@@ -21,8 +21,7 @@ class ItemController extends Controller
     }
     public function index(Request $request)
     {
-        return ItemResource::collection(Item::search($request)->paginate($request->per_page??10));
-        
+        return ItemResource::collection(Item::with('accessors')->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -34,14 +33,18 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(),Item::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Item::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
-        $type = Item::create($validator->validated());
-        return new ItemResource($type);
+        $item = Item::create($validator->validated());
+        if ($request->translations) {
+            foreach ($request->translations as $translation)
+                $item->setTranslation($translation['field'], $translation['locale'], $translation['value']);
+        }
+        return new ItemResource($item);
     }
 
     /**

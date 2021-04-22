@@ -9,40 +9,69 @@ class Task extends BaseModel
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifiers'];
+    protected $appends = ['list_identifiers', 'headers'];
 
-    public function purchase(){
+    public function purchase()
+    {
         return $this->belongsTo(Purchase::class);
     }
-    public function location(){
+    public function location()
+    {
         return $this->belongsTo(Location::class);
     }
-    public function customer(){
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
-    public function gardner(){
+    public function gardner()
+    {
         return $this->belongsTo(Gardner::class);
     }
-    public function chat(){
+    public function chat()
+    {
         return $this->belongsTo(Chat::class);
     }
-    public static $createRules= [
-        'purchase_id'=>'sometimes|exists:purchases,id',
-        'gardner_id'=>'sometimes|exists:gardners,id',
-        'location.lng'=>'required|numeric',
-        'location.lat'=>'required|numeric'
+    public static $createRules = [
+        'purchase_id' => 'sometimes|exists:purchases,id',
+        'gardner_id' => 'sometimes|exists:gardners,id',
+        'location.lng' => 'required|numeric',
+        'location.lat' => 'required|numeric'
     ];
-    public static $updateRules= [
-        'purchase_id'=>'sometimes|exists:purchases,id',
-        'gardner_id'=>'sometimes|exists:gardners,id',
-        'location.lng'=>'sometimes|numeric',
-        'location.lat'=>'sometimes|numeric'
+    public static $updateRules = [
+        'purchase_id' => 'sometimes|exists:purchases,id',
+        'gardner_id' => 'sometimes|exists:gardners,id',
+        'location.lng' => 'sometimes|numeric',
+        'location.lat' => 'sometimes|numeric'
     ];
-    public function scopeSearch($query,Request $request){
-
+    public function scopeSearch($query, Request $request)
+    {
     }
     public function getListIdentifiersAttribute()
     {
         return ['task.description'];
+    }
+    public function getLocationAttribute()
+    {
+        return "$this->lng , $this->lat";
+    }
+    public function getFinalLocationAttribute()
+    {
+        return "$this->final_lng , $this->final_lat";
+    }
+    public function getHeadersAttribute()
+    {
+        return [
+            'id',
+            'customer.name',
+            'gardner.name',
+            'discreption',
+            'plant_location_type',
+            'location',
+            'final_location',
+            'tree_number',
+            'status',
+            'created_at',
+            'updated_at'
+        ];
     }
 }

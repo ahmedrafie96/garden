@@ -2,23 +2,25 @@
 
 namespace App\Models;
 
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 
 class Category extends BaseModel
 {
     protected $guarded = [];
-    protected $appends = ['list_identifier', 'item_count', 'post_count'];
-    protected $with=[];
-    use HasFactory;
+    // protected $with = ['translations'];
+    use HasFactory, HasTranslations;
+    protected $appends = ['list_identifier', 'item_count', 'post_count', 'translations', 'headers'];
+    public $translatable = ['name', 'description'];
     public static $createRules = [
-        'name' => 'required',
-        'description' => 'required',
+        // 'name' => 'required',
+        // 'description' => 'required',
 
     ];
     public static $updateRules = [
-        'name' => 'required',
-        'description' => 'required',
+        // 'name' => 'required',
+        // 'description' => 'required',
     ];
     public function scopeSearch($query, Request $request)
     {
@@ -42,5 +44,13 @@ class Category extends BaseModel
     public function getPostCountAttribute()
     {
         return $this->posts()->count();
+    }
+    public function getHeadersAttribute()
+    {
+        return [
+            'id',
+            'name',
+            'discreption'
+        ];
     }
 }

@@ -10,7 +10,7 @@ class Order extends BaseModel implements Ownable
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifiers'];
+    protected $appends = ['list_identifiers', 'headers','total'];
 
     public function customer()
     {
@@ -41,8 +41,25 @@ class Order extends BaseModel implements Ownable
     {
         return $this->customer->id;
     }
+    public function getTotalAttribute()
+    {
+        return array_reduce($this->purchases, function ($c, $n) {
+            return $c + $n->total;
+        });
+    }
     public function getListIdentifiersAttribute()
     {
         return ['order.id'];
+    }
+    public function getHeadersAttribute()
+    {
+        return [
+            'id',
+            'customer.name',
+            'discount',
+            'free_quantity',
+            'total',
+            'created_at'
+        ];
     }
 }

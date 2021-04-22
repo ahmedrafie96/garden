@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Laratrust\Traits\LaratrustUserTrait;
 
@@ -13,7 +12,7 @@ class Customer extends User
 
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifiers','full_name'];
+    protected $appends = ['list_identifiers','full_name','headers'];
 
     public function orders()
     {
@@ -63,5 +62,14 @@ class Customer extends User
     public function getFullNameAttribute()
     {
         return "$this->first_name $this->middle_name $this->last_name";
+    }
+    public function getHeadersAttribute()
+    {
+        return [
+            'id',
+            'full_name',
+            'email',
+            'mobile'
+        ];
     }
 }

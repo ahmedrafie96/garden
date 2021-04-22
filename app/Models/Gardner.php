@@ -9,10 +9,10 @@ use Laratrust\Traits\LaratrustUserTrait;
 class Gardner extends User
 {
     use LaratrustUserTrait;
-
+    
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifiers','full_name'];
+    protected $appends = ['list_identifiers', 'full_name', 'headers'];
 
     public function tasks()
     {
@@ -43,10 +43,19 @@ class Gardner extends User
     }
     public function getListIdentifiersAttribute()
     {
-        return ['gardner.full_name','writer.full_name'];
+        return ['gardner.full_name', 'writer.full_name'];
     }
     public function getFullNameAttribute()
     {
         return "$this->first_name $this->middle_name $this->last_name";
+    }
+    public function getHeadersAttribute()
+    {
+        return [
+            'id',
+            'full_name',
+            'email',
+            'mobile'
+        ];
     }
 }

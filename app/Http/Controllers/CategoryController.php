@@ -42,6 +42,11 @@ class CategoryController extends Controller
             ], 402);
         }
         $category = Category::create($validator->validated());
+        if ($request->translations) {
+            foreach ($request->translations as $translation)
+                $category->setTranslation($translation['field'], $translation['locale'], $translation['value'])->save();
+        }
+        
         return new CategoryResource($category);
     }
 

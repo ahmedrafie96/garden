@@ -41,6 +41,10 @@ class TypeController extends Controller
             ], 402);
         }
         $type = Type::create($validator->validated());
+        if ($request->translations) {
+            foreach ($request->translations as $translation)
+                $type->setTranslation($translation['field'], $translation['locale'], $translation['value'])->save();
+        }
         return new TypeResource($type);
     }
 
@@ -65,6 +69,12 @@ class TypeController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $validator = Validator::make($request->all(), Type::$createRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
+        }
+        $type = Type::create($validator->validated()['data']);
+        return new TypeResource($type);
     }
 
     /**

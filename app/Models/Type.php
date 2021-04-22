@@ -2,22 +2,25 @@
 
 namespace App\Models;
 
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class Type extends Model
 {
-    use HasFactory;
+    use HasFactory,HasTranslations;
     protected $guarded = [];
     protected $appends = ['list_identifiers'];
+    public $translatable = ['name', 'description'];
+    
     public function item()
     {
         return $this->belongsTo(Item::class);
     }
     public static $createRules = [
         'parent_id' => 'sometimes|exists:types,id',
-        'name' => 'required',
+        'name' => 'nullable',
         'description' => 'nullable'
     ];
     public static $updateRules = [

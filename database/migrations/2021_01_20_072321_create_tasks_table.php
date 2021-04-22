@@ -21,7 +21,9 @@ class CreateTasksTable extends Migration
             $table->float('lng')->nullable();
             $table->float('lat')->nullable();
             $table->string("description")->nullable();
-            $table->enum('status',['pending','in_progress','done'])->default('pending');
+            $table->enum('status', ['pending', 'in_progress', 'done'])->default('pending');
+            $table->enum("plant_location_type", ['public', 'private'])->default('private');
+            $table->unsignedBigInteger("gallery_id")->nullable();
             $table->timestamps();
         });
     }

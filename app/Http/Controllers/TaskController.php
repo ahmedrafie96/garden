@@ -19,7 +19,7 @@ class TaskController extends Controller
     {
         $tasks = [];
         if ($this->user->hasRole('admin')) {
-            $tasks = Task::get();
+            $tasks = Task::query();
         } else {
             $tasks = $this->user->tasks();
         }

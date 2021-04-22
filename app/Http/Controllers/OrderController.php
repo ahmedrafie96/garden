@@ -20,7 +20,7 @@ class OrderController extends Controller
         //
         $orders = [];
         if ($this->user->hasRole('admin'))
-            $orders = Order::get();
+            $orders = Order::query();
         else
             $orders = $this->user->orders();
         return OrderResource::collection($orders->search($request)->paginate($request->per_page ?? 10));

@@ -20,4 +20,13 @@ class Reaction extends BaseModel implements Ownable
     {
         return $this->user->id;
     }
+    public static $createRules = [
+        'item_id' => 'sometimes|exists:items,id',
+        'post_id'=>'sometimes|exists:posts,id'
+    ];
+    public static $updateRules = [
+        'item_id' => 'sometimes|exists:items,id',
+        'post_id'=>'sometimes|exists:posts,id'
+
+    ];
 }
