@@ -29,6 +29,6 @@ class Media extends BaseModel
     ];
     public function getUrlAttribute()
     {
-        return 'http://localhost:90'.Storage::url($this->path);
+        return env('APP_URL').Storage::url($this->path);
     }
 }
