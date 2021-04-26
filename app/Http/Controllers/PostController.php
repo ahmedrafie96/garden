@@ -37,6 +37,10 @@ class PostController extends Controller
             ], 402);
         }
         $post = Post::create($validator->validated());
+        if ($request->translations) {
+            foreach ($request->translations as $translation)
+                $post->setTranslation($translation['field'], $translation['locale'], $translation['value'])->save();
+        }
         $this->user->posts()->save($post);
         return new PostResource($post);
     }

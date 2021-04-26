@@ -70,4 +70,8 @@ class Post extends BaseModel implements Ownable
             'created_at'
         ];
     }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'post_tags');
+    }
 }

@@ -24,6 +24,7 @@ class CreateItemsTable extends Migration
             $table->string("name")->nullable();
             $table->string('code')->nullable();
             $table->integer("likes")->default(0);
+            $table->text("description")->nullable();
             $table->timestamps();
         });
     }

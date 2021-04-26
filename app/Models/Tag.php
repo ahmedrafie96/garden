@@ -14,4 +14,10 @@ class Tag extends BaseModel
     {
         return ['tag.name'];
     }
+    public static $createRules = [
+        'name'=>'required'
+    ];
+    public static $updateRules = [
+        'name'=>'required'
+    ];
 }

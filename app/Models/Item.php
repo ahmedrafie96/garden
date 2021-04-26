@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
-use Spatie\Translatable\HasTranslations;
+use App\Traits\HasTranslations;
 
 class Item extends BaseModel
 {
@@ -13,7 +13,7 @@ class Item extends BaseModel
     protected $guarded = [];
     protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked'];
     protected $with = ['type'];
-    public $translatable = ['name'];
+    public $translatable = ['name','description'];
     public function accessors()
     {
         return $this->hasMany(Accessor::class);

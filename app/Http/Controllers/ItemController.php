@@ -42,7 +42,7 @@ class ItemController extends Controller
         $item = Item::create($validator->validated());
         if ($request->translations) {
             foreach ($request->translations as $translation)
-                $item->setTranslation($translation['field'], $translation['locale'], $translation['value']);
+                $item->setTranslation($translation['field'], $translation['locale'], $translation['value'])->save();
         }
         return new ItemResource($item);
     }
