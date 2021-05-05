@@ -24,6 +24,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'api', 'as' => 'auth.'], funct
     foreach ($auth_routes as $auth_route) {
         Route::post("/" . $auth_route, "AuthController@" . $auth_route)->name($auth_route);
     }
+    Route::post("/{provider}/callback","AuthController@SocialSignup");
 });
 // Route::group(['prefix' => 'user', 'middleware' => 'api', 'as' => 'user.'], function () {
 //     $users_routes = ['register', 'changePassword', 'resetPassword', 'block'];

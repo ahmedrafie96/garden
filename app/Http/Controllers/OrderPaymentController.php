@@ -40,7 +40,6 @@ class OrderPaymentController extends Controller
     public function store(Request $request, Order $order)
     {
         if ($this->user->owns($order) || $this->user->hasRole('admin')) {
-
             $validator = Validator::make($request->all(), Payment::$createRules);
             $card_token = $request->card_token;
             if ($validator->fails()) {

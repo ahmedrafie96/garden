@@ -66,14 +66,25 @@ class TypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Type $type)
     {
         //
-        $validator = Validator::make($request->all(), Type::$createRules);
+        $validator = Validator::make($request->all(), Type::$updateRules);
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()]);
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 402);
         }
-        $type = Type::create($validator->validated()['data']);
+        $type->update($validator->validated());
+        if ($request->translations) {
+            foreach ($request->translations as $translation)
+                $type->setTranslation($translation['field'], $translation['locale'], $translation['value'])->save();
+        }
+        // $validator = Validator::make($request->all(), Type::$createRules);
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()]);
+        // }
+        // $type = Type::create($validator->validated());
         return new TypeResource($type);
     }
 

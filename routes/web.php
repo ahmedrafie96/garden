@@ -37,3 +37,4 @@ Route::get('/{any?}', function () {
     header('content-type:text/html');
     return view('home');
 });
+

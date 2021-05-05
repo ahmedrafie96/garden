@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\HelperClasses\ResponseManager;
 use Illuminate\Support\Pluralizer;
+use Laravel\Socialite\Facades\Socialite;
 
 // use Laravel\Socialite\Facades\Socialite;
 class AuthController extends Controller
@@ -72,5 +73,11 @@ class AuthController extends Controller
     //     $user = Socialite::driver('github')->user();
     //     // $user->token;
     // }
+    public function SocialSignup($provider)
+    {
+        // Socialite will pick response data automatic
+        $user = Socialite::driver($provider)->stateless()->user();
+        return response()->json($user);
+    }
 
 }

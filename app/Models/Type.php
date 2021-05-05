@@ -11,7 +11,7 @@ class Type extends Model
 {
     use HasFactory,HasTranslations;
     protected $guarded = [];
-    protected $appends = ['list_identifiers'];
+    protected $appends = ['list_identifiers','translations'];
     public $translatable = ['name', 'description'];
     
     public function item()
