@@ -40,6 +40,10 @@ class ItemController extends Controller
             ], 402);
         }
         $item = Item::create($validator->validated());
+        $categories = Validator::make($request->all(), [
+            'categories.*' => 'required|exists:categories,id'
+        ]);
+        $item->categories()->sync($categories->validated()['categories']);
         if ($request->translations) {
             foreach ($request->translations as $translation)
                 $item->setTranslation($translation['field'], $translation['locale'], $translation['value'])->save();

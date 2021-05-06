@@ -22,9 +22,9 @@ class Item extends BaseModel
     {
         return $this->belongsTo(Type::class);
     }
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class,'item_categories');
     }
     public function tags()
     {
@@ -62,6 +62,9 @@ class Item extends BaseModel
         });
         $query->when($request->name,function($query,$name)use($locale){
             $query->where('name->'.$locale,'like','%'.$name.'%');
+        });
+        $query->when($request->categories,function($query,$categories){
+            $query->join('item_categories','items.id','item_categories.item_id')->whereIn('category_id',$categories);
         });
     }
     public function getListIdentifiersAttribute()
