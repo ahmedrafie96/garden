@@ -56,6 +56,13 @@ class Item extends BaseModel
     ];
     public function scopeSearch($query, Request $request)
     {
+        $locale = app()->getLocale();
+        $query->when($request->ids,function($query,$ids){
+            $query->whereIn('id',$ids);
+        });
+        $query->when($request->name,function($query,$name)use($locale){
+            $query->where('name->'.$locale,'like','%'.$name.'%');
+        });
     }
     public function getListIdentifiersAttribute()
     {

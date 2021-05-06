@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Laratrust\Contracts\Ownable;
-use Spatie\Translatable\HasTranslations;
 
 class Post extends BaseModel implements Ownable
 {
