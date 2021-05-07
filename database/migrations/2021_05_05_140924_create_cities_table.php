@@ -17,6 +17,7 @@ class CreateCitiesTable extends Migration
             $table->id();
             $table->unsignedBigInteger("country_id");
             $table->json("name")->nullable();
+            $table->unsignedBigInteger("gallery_id")->nullable();
             $table->timestamps();
         });
     }

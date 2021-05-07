@@ -41,7 +41,7 @@ class Item extends BaseModel
         'code' => 'required',
         'category_id' => 'sometimes|exists:categories,id',
         'type_id' => 'required|exists:types,id',
-        'available_qty' => 'integer',
+        // 'available_qty' => 'integer',
         'price' => 'numeric'
     ];
     public static $updateRules = [
@@ -51,7 +51,7 @@ class Item extends BaseModel
         'category_id' => 'sometimes|exists:categories,id',
         'type_id' => 'sometimes|exists:types,id',
         'gallery_id' => 'sometimes|exists:galleries,id',
-        'available_qty' => 'sometimes|integer',
+        // 'available_qty' => 'sometimes|integer',
         'price' => 'numeric'
     ];
     public function scopeSearch($query, Request $request)
@@ -67,6 +67,7 @@ class Item extends BaseModel
             $query->join('item_categories','items.id','item_categories.item_id')->whereIn('category_id',$categories);
         });
     }
+    
     public function getListIdentifiersAttribute()
     {
         return ['item.name', 'accessor.name'];

@@ -20,7 +20,7 @@ class CreateItemsTable extends Migration
             $table->unsignedBigInteger("type_id")->nullable();
             // $table->unsignedBigInteger("category_id")->nullable();
             $table->double('price')->default(0);
-            $table->integer('available_qty')->default(0);
+            // $table->integer('available_qty')->default(0);
             $table->json("name")->nullable();
             $table->string('code')->nullable();
             $table->integer("likes")->default(0);

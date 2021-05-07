@@ -34,14 +34,12 @@ class Task extends BaseModel
     public static $createRules = [
         'purchase_id' => 'sometimes|exists:purchases,id',
         'gardner_id' => 'sometimes|exists:gardners,id',
-        'location.lng' => 'required|numeric',
-        'location.lat' => 'required|numeric'
+        'city_id' => 'required|exists:cities,id'
     ];
     public static $updateRules = [
         'purchase_id' => 'sometimes|exists:purchases,id',
         'gardner_id' => 'sometimes|exists:gardners,id',
-        'location.lng' => 'sometimes|numeric',
-        'location.lat' => 'sometimes|numeric'
+        'city_id' => 'sometimes|exists:cities,id'
     ];
     public function scopeSearch($query, Request $request)
     {

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('test', function () {
-    return response()->json([env('TEST'), env('DB_USERNAME')]);
+    return response()->json([env('APP_URL'), env('DB_USERNAME')]);
 });
 Route::get('setup', function () {
     $setup = file_get_contents('../setup');
