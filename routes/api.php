@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Route;
 $controllers = require base_path('vendor/composer/autoload_classmap.php');
 $controllers = array_keys($controllers);
 $controllers = array_filter($controllers, function ($controller) {
-    return strpos($controller, 'App\Http\Controllers') !== false && strlen($controller) > 31 && strpos($controller,'Auth')== false && strpos($controller, 'User') == false;
+    return strpos($controller, 'App\Http\Controllers') !== false && strlen($controller) > 31 && strpos($controller, 'Auth') == false && strpos($controller, 'User') == false;
 });
+
+
 array_map(function ($controller) {
     $controllerName = str_replace('App\Http\Controllers\\', '', $controller);
     $models = substr($controllerName, 0, -10);
@@ -17,14 +19,23 @@ array_map(function ($controller) {
         return lcfirst($model);
     }, $models);
     $params = join(".", $models);
-    Route::apiResource($params,$controllerName)->shallow();
+    Route::apiResource($params, $controllerName)->shallow();
 }, $controllers);
-Route::group(['prefix' => 'auth', 'middleware' => 'api', 'as' => 'auth.'], function () {
-    $auth_routes = ['login', 'me', 'logout', 'refresh'];
+
+
+Route::group([
+    'prefix' => 'auth',
+    'middleware' => 'api',
+    'as' => 'auth.'
+], function () {
+    
+ $auth_routes = ['login', 'me', 'logout', 'refresh'];
+
     foreach ($auth_routes as $auth_route) {
         Route::post("/" . $auth_route, "AuthController@" . $auth_route)->name($auth_route);
     }
-    Route::post("/{provider}/callback","AuthController@SocialSignup");
+
+    Route::post("/{provider}/callback", "AuthController@SocialSignup");
 });
 // Route::group(['prefix' => 'user', 'middleware' => 'api', 'as' => 'user.'], function () {
 //     $users_routes = ['register', 'changePassword', 'resetPassword', 'block'];

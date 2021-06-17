@@ -18,7 +18,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         //
-        return PostResource::collection(Post::search($request)->paginate($request->per_page ?? 10));
+        return PostResource::collection(Post::latest()->search($request)->paginate($request->per_page ?? 10));
     }
 
     /**

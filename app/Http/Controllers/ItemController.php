@@ -82,6 +82,6 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        Item::destroy($item->id);
     }
 }

@@ -13,6 +13,10 @@ class Setting extends Model
         'key' => 'required',
         'value' => 'required'
     ];
+    public static $updateRules = [
+        'key' => 'required',
+        'value' => 'required'
+    ];
     public function scopeSearch($request,$query){
 
     }

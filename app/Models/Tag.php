@@ -9,7 +9,7 @@ class Tag extends BaseModel
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['list_identifiesr'];
+    protected $appends = ['list_identifiers'];
     public function getListIdentifiersAttribute()
     {
         return ['tag.name'];

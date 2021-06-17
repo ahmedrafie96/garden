@@ -11,6 +11,12 @@ class Task extends BaseModel
     protected $guarded = [];
     protected $appends = ['list_identifiers', 'headers'];
 
+    // i added this relation
+    public function confirmation()
+    {
+        return $this->hasOne(Confirmation::class);
+    }
+    
     public function purchase()
     {
         return $this->belongsTo(Purchase::class);

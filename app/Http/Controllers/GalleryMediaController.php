@@ -77,6 +77,13 @@ class GalleryMediaController extends Controller
         if ($this->user->hasRole("admin") || $this->user->owns($media)) {
             $validator = Validator::make($request->all(), Media::$updateRules);
             $media->update($validator->validated());
+
+            $path = $request->file('file')->store(
+                'media',
+                'public'
+            );
+            $arr = ['path' => $path];
+            $media->update($arr);
             return new MediaResource($media);
         }
         return response()->json([

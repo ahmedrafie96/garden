@@ -20,6 +20,10 @@ class CreateConfirmationsTable extends Migration
             $table->float('final_lat')->nullable();
             $table->string("tree_number")->nullable();
             $table->unsignedBigInteger("gallery_id")->nullable();
+            // $table->unsignedBigInteger('country_id')->nullable();
+            // $table->unsignedBigInteger('city_id')->nullable();
+            // $table->unsignedBigInteger("task_id")->nullable();
+            $table->string("discreption")->nullable();
             $table->timestamps();
         });
     }

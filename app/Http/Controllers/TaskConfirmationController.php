@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ConfirmationResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Confirmation;
+use App\Models\Gallery;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\Task;
+use Illuminate\Support\Facades\Mail;
 
 class TaskConfirmationController extends Controller
 {
@@ -18,10 +21,10 @@ class TaskConfirmationController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,Task $task)
+    public function index(Request $request, Task $task)
     {
         //
-        return TaskResource::collection(Task::search($request)->paginate($request->per_page??10));
+        return TaskResource::collection(Task::search($request)->paginate($request->per_page ?? 10));
     }
 
     /**
@@ -33,14 +36,15 @@ class TaskConfirmationController extends Controller
      */
     public function store(Request $request, Task $task)
     {
-        $validator = Validator::make($request->all(),Confirmation::$createRules);
-        if($validator->fails()){
+        $validator = Validator::make($request->all(), Confirmation::$createRules);
+        if ($validator->fails()) {
             return response()->json([
-                'errors'=>$validator->errors()
-            ],402);
+                'errors' => $validator->errors()
+            ], 402);
         }
         $confirmation = Confirmation::create($validator->validated());
-        $task->confirmations()->save($confirmation);
+        $task->confirmation()->save($confirmation);
+        $confirmation->sendEmail();
         return new ConfirmationResource($confirmation);
     }
 
@@ -68,15 +72,15 @@ class TaskConfirmationController extends Controller
     public function update(Request $request, Task $task, Confirmation $confirmation)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($confirmation)){
-            $validator = Validator::make($request->all(),Confirmation::$updateRules);
+        if ($this->user->hasRole("admin") || $this->user->owns($confirmation)) {
+            $validator = Validator::make($request->all(), Confirmation::$updateRules);
             $confirmation->update($validator->validated());
             return new ConfirmationResource($confirmation);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 
     /**
@@ -89,13 +93,13 @@ class TaskConfirmationController extends Controller
     public function destroy(Task $task, Confirmation $confirmation)
     {
         //
-        if($this->user->hasRole("admin") || $this->user->owns($confirmation)){
+        if ($this->user->hasRole("admin") || $this->user->owns($confirmation)) {
             $confirmation->delete();
             return new ConfirmationResource($confirmation);
         }
         return response()->json([
-            'errors'=>[],
-            'message'=> 'forbidden'
-        ],403);
+            'errors' => [],
+            'message' => 'forbidden'
+        ], 403);
     }
 }

@@ -92,6 +92,7 @@ class SettingController extends Controller
             $setting->delete();
             return new SettingResource($setting);
         }
+        
         return response()->json([
             'errors' => [],
             'message' => 'forbidden'

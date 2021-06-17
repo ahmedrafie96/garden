@@ -11,9 +11,13 @@ class Item extends BaseModel
     use HasFactory, HasTranslations;
 
     protected $guarded = [];
-    protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked'];
+    protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked','category_ids'];
     protected $with = ['type'];
+    public function getCategoryIdsAttribute(){
+        return $this->categories()->pluck('categories.id');
+    }
     public $translatable = ['name','description'];
+    
     public function accessors()
     {
         return $this->hasMany(Accessor::class);
@@ -40,7 +44,7 @@ class Item extends BaseModel
         // 'name'=>'required',
         'code' => 'required',
         'category_id' => 'sometimes|exists:categories,id',
-        'type_id' => 'required|exists:types,id',
+        // 'type_id' => 'required|exists:types,id',
         // 'available_qty' => 'integer',
         'price' => 'numeric'
     ];
@@ -65,6 +69,9 @@ class Item extends BaseModel
         });
         $query->when($request->categories,function($query,$categories){
             $query->join('item_categories','items.id','item_categories.item_id')->whereIn('category_id',$categories);
+        });
+        $query->when($request->price,function($query ,$price ){
+            $query->where('price' , '<=' ,$price);
         });
     }
     
