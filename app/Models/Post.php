@@ -43,9 +43,9 @@ class Post extends BaseModel implements Ownable
         'gallery_id' => 'nullable',
 
     ];
-    public function scopeSearch($query, Request $request)
-    {
-    }
+    // public function scopeSearch($query, Request $request)
+    // {
+    // }
     public function getFieldsVisibilityAttribute()
     {
         return [
@@ -73,5 +73,19 @@ class Post extends BaseModel implements Ownable
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'post_tags');
+    }
+    public function scopeSearch($query,Request $request)
+    {
+        // not good to reach the request from the model 
+        // so we import fillters thorw Fillters from request 
+
+
+        $query->when($request->title,fn ($query, $title) => // ?? wheen theres no search key in the array
+            $query
+                ->where('title','like', '%'.$title.'%' )
+        );
+
+     
+
     }
 }

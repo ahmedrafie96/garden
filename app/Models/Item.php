@@ -11,13 +11,14 @@ class Item extends BaseModel
     use HasFactory, HasTranslations;
 
     protected $guarded = [];
-    protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked','category_ids'];
+    protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked', 'category_ids','average_rank' ,  'rank_count' ];
     protected $with = ['type'];
-    public function getCategoryIdsAttribute(){
+    public function getCategoryIdsAttribute()
+    {
         return $this->categories()->pluck('categories.id');
     }
-    public $translatable = ['name','description'];
-    
+    public $translatable = ['name', 'description'];
+
     public function accessors()
     {
         return $this->hasMany(Accessor::class);
@@ -28,7 +29,7 @@ class Item extends BaseModel
     }
     public function categories()
     {
-        return $this->belongsToMany(Category::class,'item_categories');
+        return $this->belongsToMany(Category::class, 'item_categories');
     }
     public function tags()
     {
@@ -60,21 +61,22 @@ class Item extends BaseModel
     ];
     public function scopeSearch($query, Request $request)
     {
-        $locale = app()->getLocale();
-        $query->when($request->ids,function($query,$ids){
-            $query->whereIn('id',$ids);
+        // $locale = app()->getLocale();
+        $query->when($request->ids, function ($query, $ids) {
+            $query->whereIn('id', $ids);
         });
-        $query->when($request->name,function($query,$name)use($locale){
-            $query->where('name->'.$locale,'like','%'.$name.'%');
+        $query->when($request->name, function ($query, $name) {
+            $query->whereRaw(' JSON_EXTRACT(name, "$") like "%' . $name . '%"');
+            // $query->where('name->en like', '%' . $name . '%');
         });
-        $query->when($request->categories,function($query,$categories){
-            $query->join('item_categories','items.id','item_categories.item_id')->whereIn('category_id',$categories);
+        $query->when($request->categories, function ($query, $categories) {
+            $query->join('item_categories', 'items.id', 'item_categories.item_id')->whereIn('category_id', $categories);
         });
-        $query->when($request->price,function($query ,$price ){
-            $query->where('price' , '<=' ,$price);
+        $query->when($request->price, function ($query, $price) {
+            $query->where('price', '<=', $price);
         });
     }
-    
+
     public function getListIdentifiersAttribute()
     {
         return ['item.name', 'accessor.name'];
@@ -104,4 +106,17 @@ class Item extends BaseModel
             return false;
         return $this->reactions()->where('user_id', '=', $user->id)->where('user_type', '=', get_class($user))->count() > 0;
     }
+    public function getRelatedItemsAttribute(){
+        return Item::join('item_categories','item_categories.item_id','items.id')->whereIn('category_id',$this->categories()->pluck('id'))->limit(4)->get();
+    }
+    public function ranks(){
+        return $this->hasMany(Rank::class);
+    }
+    public function getAverageRankAttribute(){
+        return $this->ranks()->avg('rank');
+    }
+    public function getRankCountAttribute(){
+        return $this->ranks()->count();
+    }
+
 }

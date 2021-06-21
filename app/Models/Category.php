@@ -11,7 +11,7 @@ class Category extends BaseModel
     protected $guarded = [];
     // protected $with = ['translations'];
     use HasFactory, HasTranslations;
-    protected $appends = ['list_identifier', 'translations', 'headers'];
+    protected $appends = ['list_identifier', 'translations', 'headers','item_count'];
     public $translatable = ['name', 'description'];
     public static $createRules = [
         // 'name' => 'required',
@@ -31,16 +31,16 @@ class Category extends BaseModel
     }
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->belongsToMany(Item::class,'item_categories');
     }
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
-    // public function getItemCountAttribute()
-    // {
-    //     return $this->items()->count();
-    // }
+    public function getItemCountAttribute()
+    {
+        return $this->items()->count();
+    }
     // public function getPostCountAttribute()
     // {
     //     return $this->posts()->count();
