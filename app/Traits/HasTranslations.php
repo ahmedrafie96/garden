@@ -22,14 +22,14 @@ trait HasTranslations
         foreach ($attributes as $attribute) {
             $attr_translations = $this->getTranslations($attribute);
             foreach (array_keys($attr_translations) as $locale)
-                $translations += [
+                $translations = array_merge($translations, [
                     [
 
                         'field' => $attribute,
                         'locale' => $locale,
                         'value' => $attr_translations[$locale]
                     ]
-                ];
+                ]);
         }
         return $translations;
     }

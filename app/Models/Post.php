@@ -76,9 +76,6 @@ class Post extends BaseModel implements Ownable
     }
     public function scopeSearch($query,Request $request)
     {
-        // not good to reach the request from the model 
-        // so we import fillters thorw Fillters from request 
-
 
         $query->when($request->title,fn ($query, $title) => // ?? wheen theres no search key in the array
             $query

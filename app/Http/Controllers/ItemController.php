@@ -24,7 +24,7 @@ class ItemController extends Controller
         if($request->related_to){
             return ItemResource::collection(Item::find($request->related_to)->related_items);
         }
-        return ItemResource::collection(Item::with('accessors')->search($request)->paginate($request->per_page ?? 10));
+        return ItemResource::collection(Item::with('accessors')->search($request)->paginate($request->per_page ?? 12));
     }
 
     /**

@@ -34,7 +34,7 @@ class ItemTagController extends Controller
     public function store(Request $request, Item $item)
     {
         $validator = Validator::make($request->all(), [
-            'tags.*.name'=>'required'
+            'tags.*'=>'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -43,9 +43,8 @@ class ItemTagController extends Controller
         }
         $tags = $validator->validated();
         // return response()->json($tags);
-        foreach ($tags['tags'] as $tag_name) {
-            $tag = Tag::firstOrCreate($tag_name);
-            $item->tags()->save($tag);
+        foreach ($tags['tags'] as $tag_id) {
+            $item->tags()->save(Tag::find($tag_id));
         }
         return response()->json(['message'=>'done']);
     }
