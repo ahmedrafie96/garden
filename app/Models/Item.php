@@ -73,7 +73,8 @@ class Item extends BaseModel
             $query->join('item_categories', 'items.id', 'item_categories.item_id')->whereIn('category_id', $categories);
         });
         $query->when($request->price, function ($query, $price) {
-            $query->where('price', '<=', $price);
+             $query->whereBetween('price', [$price[0] , $price[1]]);
+           
         });
     }
 
@@ -107,7 +108,7 @@ class Item extends BaseModel
         return $this->reactions()->where('user_id', '=', $user->id)->where('user_type', '=', get_class($user))->count() > 0;
     }
     public function getRelatedItemsAttribute(){
-        return Item::join('item_categories','item_categories.item_id','items.id')->whereIn('category_id',$this->categories()->pluck('id'))->limit(4)->get();
+        return Item::join('item_categories','item_categories.item_id','items.id')->whereIn('category_id',$this->categories()->pluck('categories.id'))->limit(4)->get();
     }
     public function ranks(){
         return $this->hasMany(Rank::class);

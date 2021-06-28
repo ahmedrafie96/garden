@@ -11,6 +11,7 @@ class AddSizeToItem extends Migration
      *
      * @return void
      */
+    // php artisan make:migration add_size_to_item --table=items
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
