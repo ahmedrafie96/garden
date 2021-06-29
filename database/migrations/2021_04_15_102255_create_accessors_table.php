@@ -16,8 +16,10 @@ class CreateAccessorsTable extends Migration
         Schema::create('accessors', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("item_id")->nullable();
-            $table->unsignedBigInteger("accessor_item_id")->nullable();
+            $table->unsignedBigInteger("category_id")->nullable();
+            // $table->unsignedBigInteger("accessor_item_id")->nullable();
             $table->integer("qty")->default(1);
+            $table->boolean('mandatory')->default(false);
             $table->timestamps();
         });
     }

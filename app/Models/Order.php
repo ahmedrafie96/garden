@@ -43,7 +43,7 @@ class Order extends BaseModel implements Ownable
     }
     public function getTotalAttribute()
     {
-        return array_reduce($this->purchases, function ($c, $n) {
+        return array_reduce($this->purchases->all(), function ($c, $n) {
             return $c + $n->total;
         });
     }

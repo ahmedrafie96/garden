@@ -19,6 +19,11 @@ class OrderPurchaseController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->middleware('authorizor:admin,customer,gardner', ['except' => ['index', 'show']]);
+    }
     public function index(Request $request, Order $order)
     {
         //
@@ -46,8 +51,8 @@ class OrderPurchaseController extends Controller
             $order->purchases()->save($purchase);
             $task_validator = Validator::make($request->all(), Task::$createRules);
             if (!$task_validator->fails()) {
-                $task = Task::create($task_validator->validated()['location']);
-                $task->customer()->save($order->customer);
+                $task = Task::create($task_validator->validated());
+                $task->customer()->associate($order->customer)->save();
                 $purchase->task()->save($task);
             }
             return new PurchaseResource($purchase);

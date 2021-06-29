@@ -17,7 +17,7 @@ class Item extends BaseModel
     {
         return $this->categories()->pluck('categories.id');
     }
-    public $translatable = ['name', 'description'];
+    public $translatable = ['name', 'description' , 'brief'];
 
     public function accessors()
     {
@@ -47,7 +47,11 @@ class Item extends BaseModel
         'category_id' => 'sometimes|exists:categories,id',
         // 'type_id' => 'required|exists:types,id',
         // 'available_qty' => 'integer',
-        'price' => 'numeric'
+        'price' => 'numeric',
+        'item_type'=>'sometimes|numeric',
+        'height'=>'sometimes',
+        'radius'=>'sometimes'
+
     ];
     public static $updateRules = [
         'parent_id' => 'sometimes|exists:items,id',
@@ -57,7 +61,10 @@ class Item extends BaseModel
         'type_id' => 'sometimes|exists:types,id',
         'gallery_id' => 'sometimes|exists:galleries,id',
         // 'available_qty' => 'sometimes|integer',
-        'price' => 'numeric'
+        'price' => 'numeric',
+        'item_type'=>'sometimes|numeric',
+        'height'=>'sometimes',
+        'radius'=>'sometimes'
     ];
     public function scopeSearch($query, Request $request)
     {

@@ -53,4 +53,7 @@ class Category extends BaseModel
             'discreption'
         ];
     }
+    public function accessories(){
+        return $this->hasMany(Accessor::class);
+    }
 }

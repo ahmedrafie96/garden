@@ -38,7 +38,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()]);
         }
-        $order = Order::create($validator->validated()['data']);
+        $order = Order::create($validator->validated());
         return new OrderResource($order);
     }
 

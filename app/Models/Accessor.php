@@ -23,11 +23,13 @@ class Accessor extends BaseModel
         'item_id' => 'sometimes|exists:items,id',
         'accessor_item_id' => 'sometimes|exists:items,id',
         'qty' => 'integer',
+        'category_id'=>'required'
     ];
     public static $updateRules = [
         'item_id' => 'sometimes|exists:items,id',
         'accessor_item_id' => 'sometimes|exists:items,id',
         'qty' => 'integer',
+        'category_id'=>'required'
     ];
     public function getListIdentifiersAttribute()
     {

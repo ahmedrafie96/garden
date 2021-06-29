@@ -49,7 +49,6 @@ class Confirmation extends Model
         $tree_number = $this->tree_number;
         $post = $this->post;
         $photo = $this->gallery->url;
-
         Mail::to($customer->email)
         ->send(new confirmationEmail($customer, $tree_number , $post , $photo));
     }
