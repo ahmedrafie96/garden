@@ -11,8 +11,12 @@ class Item extends BaseModel
     use HasFactory, HasTranslations;
 
     protected $guarded = [];
-    protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked', 'category_ids','average_rank' ,  'rank_count' ];
+    protected $appends = ['list_identifiers', 'image', 'translations', 'headers', 'liked', 'category_ids','average_rank' ,  'rank_count' ,'tag_ids' ];
     protected $with = ['type'];
+    public function getTagIdsAttribute()
+    {
+        return $this->tags()->pluck('tags.id');
+    }
     public function getCategoryIdsAttribute()
     {
         return $this->categories()->pluck('categories.id');
@@ -35,6 +39,7 @@ class Item extends BaseModel
     {
         return $this->belongsToMany(Tag::class, 'item_tags');
     }
+
     public function gallery()
     {
         return $this->belongsTo(Gallery::class);
